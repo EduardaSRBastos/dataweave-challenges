@@ -2,7 +2,7 @@
 
 # DataWeave Challenges
 
- <p><i> DataWeave challenges from ProstDev.com </i></p>
+ <p><i> DataWeave challenges from <a href="https://www.prostdev.com/">ProstDev.com</a> with explanations.</i></p>
 
 </div>
 
@@ -22,11 +22,54 @@ output application/json
 {
   "Highest Number": max(payload splitBy "\n\n" map ((item) -> sum(item splitBy "\n") as Number)),
   "Explanation": {
-      "1º Part": payload splitBy "\n\n",
-      "2º Part": payload splitBy "\n\n" map ((item) -> (item splitBy "\n")),
-      "3º Part": payload splitBy "\n\n" map ((item) -> sum(item splitBy "\n") as Number)
-  }
+      "Split in the Empty Paragraph": payload splitBy "\n\n",
+      "Split in Clean Arrays": payload splitBy "\n\n" map ((item) -> (item splitBy "\n")),
+      "Sum Array Values": payload splitBy "\n\n" map ((item) -> sum(item splitBy "\n") as Number)
+    }
 }
 
+```
+</details>
+
+<br>
+
+### [Challenge #2](https://www.prostdev.com/post/dataweave-programming-challenge-2)
+
+<a href="https://dataweave.mulesoft.com/learn/playground?projectMethod=GHRepo&repo=EduardaSRBastos%2Fdataweave-challenges&path=challenge-2">DataWeave Playground<a>
+
+<details>
+  <summary>Function</summary>
+
+```dataweave
+%dw 2.0
+output application/json 
+
+var firstCol = payload splitBy "\n" map (item) -> (item splitBy " ")[0]
+var secondCol = payload splitBy "\n" map (item) -> (item splitBy " ")[1]
+---
+{
+  "Total Points": sum(firstCol map ((item, index) -> 
+            if (item == secondCol[index])
+              3
+            else if ((item == "R" and secondCol[index] == "P") 
+              or (item == "P" and secondCol[index] == "S")  
+              or (item == "S" and secondCol[index] == "R"))
+              6
+            else
+              0)),
+  "Explanation": {
+      "1º Column": payload splitBy "\n" map (item) -> (item splitBy " ")[0],
+      "2º Column": payload splitBy "\n" map (item) -> (item splitBy " ")[1],
+      "Counting Points": firstCol map ((item, index) -> 
+              if (item == secondCol[index])
+                3
+              else if ((item == "R" and secondCol[index] == "P") 
+                or (item == "P" and secondCol[index] == "S")  
+                or (item == "S" and secondCol[index] == "R"))
+                6
+               else
+                0)
+    }
+}
 ```
 </details>

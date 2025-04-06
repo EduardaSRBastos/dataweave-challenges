@@ -22,12 +22,11 @@ output application/json
 {
   "Highest Number": max(payload splitBy "\n\n" map ((item) -> sum(item splitBy "\n") as Number)),
   "Explanation": {
-      "Split in the Empty Paragraph": payload splitBy "\n\n",
-      "Split in Clean Arrays": payload splitBy "\n\n" map ((item) -> (item splitBy "\n")),
-      "Sum Array Values": payload splitBy "\n\n" map ((item) -> sum(item splitBy "\n") as Number)
+    "Split in the Empty Paragraph": payload splitBy "\n\n",
+    "Split in Clean Arrays": payload splitBy "\n\n" map ((item) -> (item splitBy "\n")),
+    "Sum Array Values": payload splitBy "\n\n" map ((item) -> sum(item splitBy "\n") as Number)
     }
 }
-
 ```
 </details>
 
@@ -47,26 +46,26 @@ var secondCol = payload splitBy "\n" map (item) -> (item splitBy " ")[1]
 ---
 {
   "Total Points": sum(firstCol map ((item, index) -> 
-            if (item == secondCol[index])
-              3
-            else if ((item == "R" and secondCol[index] == "P") 
-              or (item == "P" and secondCol[index] == "S")  
-              or (item == "S" and secondCol[index] == "R"))
-              6
-            else
-              0)),
+    if (item == secondCol[index])
+      3
+    else if ((item == "R" and secondCol[index] == "P") 
+      or (item == "P" and secondCol[index] == "S")  
+      or (item == "S" and secondCol[index] == "R"))
+      6
+    else
+      0)),
   "Explanation": {
-      "1º Column": payload splitBy "\n" map (item) -> (item splitBy " ")[0],
-      "2º Column": payload splitBy "\n" map (item) -> (item splitBy " ")[1],
-      "Counting Points": firstCol map ((item, index) -> 
-              if (item == secondCol[index])
-                3
-              else if ((item == "R" and secondCol[index] == "P") 
-                or (item == "P" and secondCol[index] == "S")  
-                or (item == "S" and secondCol[index] == "R"))
-                6
-               else
-                0)
+    "1º Column": payload splitBy "\n" map (item) -> (item splitBy " ")[0],
+    "2º Column": payload splitBy "\n" map (item) -> (item splitBy " ")[1],
+    "Counting Points": firstCol map ((item, index) -> 
+      if (item == secondCol[index])
+        3
+      else if ((item == "R" and secondCol[index] == "P") 
+          or (item == "P" and secondCol[index] == "S")  
+          or (item == "S" and secondCol[index] == "R"))
+          6
+      else
+        0)
     }
 }
 ```
@@ -84,18 +83,20 @@ var secondCol = payload splitBy "\n" map (item) -> (item splitBy " ")[1]
 import mapString, isAlphanumeric, reverse from dw::core::Strings
 output application/json
 
-var sentences = payload splitBy "\n" map ((item) -> item mapString ((character) -> if (isAlphanumeric(character))
-                lower(character)
-              else
-                ""))
+var sentences = payload splitBy "\n" map ((item) -> 
+  item mapString ((character) -> 
+    if (isAlphanumeric(character))
+      lower(character)
+    else
+      ""))
 ---
 {
   "Sum of Palindrome Characters": sum(sentences map ((item, index) -> if(item == reverse(item)) sizeOf((payload splitBy "\n")[index]) else 0)),
   "Explanation": {
-      "Clean Sentences": sentences,
-      "Palindrome Sentences": sentences map ((item, index) -> if(item == reverse(item)) item else ""),
-      "Size of Original Palindrome Sentences": sentences map ((item, index) -> if(item == reverse(item)) sizeOf((payload splitBy "\n")[index]) else 0)
-    }
+    "Clean Sentences": sentences,
+    "Palindrome Sentences": sentences map ((item, index) -> if(item == reverse(item)) item else ""),
+    "Size of Original Palindrome Sentences": sentences map ((item, index) -> if(item == reverse(item)) sizeOf((payload splitBy "\n")[index]) else 0)
+  }
 }
 ```
 </details>
@@ -120,6 +121,7 @@ var towers = payload.towers mapObject (
   else  // Left tower - aux
     aux: {name: $$, value: $}
 )
+
 var moves = payload.moves
 
 var toh = (disks, source, target, aux, moves) ->
@@ -146,8 +148,59 @@ var finalTowers = {
   targetTower: payload.targetTower,
   towers: finalTowers orderBy($$),
   Explanation: {
-      "Towers Var -  Separate the name and value for each tower": towers,
-      "ToH Function - Count the number of moves": toh(payload.disks, towers.source.name, towers.target.name, towers.aux.name, moves)
+    "Towers Var -  Separate the name and value for each tower": towers,
+    "ToH Function - Count the number of moves": toh(payload.disks, towers.source.name, towers.target.name, towers.aux.name, moves)
+  }
+}
+```
+</details>
+
+### [Challenge #5 - Reverse Phrase's Words, Keeping the Punctuation](https://www.prostdev.com/post/dataweave-programming-challenge-5)
+
+<a href="https://dataweave.mulesoft.com/learn/playground?projectMethod=GHRepo&repo=EduardaSRBastos%2Fdataweave-challenges&path=challenge-5">DataWeave Playground<a>
+
+<details>
+  <summary>Function</summary>
+
+```dataweave
+%dw 2.0
+import indexWhere from dw::core::Arrays
+import update from dw::util::Values
+output application/json  
+---
+{
+  // $: item, $$: index
+  "Reverse Word Order": payload splitBy "\n" map 
+    
+    // Phrases without '!' and ','
+    if (!(($ contains "!") or ($ contains ",")))
+      $ splitBy " " orderBy -$$ joinBy " "
+
+    // Phrases with both '!' and ','
+    else if (($ contains "!") and ($ contains ","))
+      do {
+        var commaLocation = ($ splitBy " ") indexWhere ($ contains ",")
+        ---
+        $ replace "!" with "" replace "," with "" splitBy " " update [0] with ($ ++ "!") orderBy -$$ update [ commaLocation ] with ($ ++ ",") joinBy " "
+      }
+  
+    // Phrases with only '!'
+    else if ($ contains "!") 
+      $ replace "!" with "" splitBy " " update [0] with ($ ++ "!") orderBy -$$ joinBy " " 
+
+    // Phrases with only ',    '
+    else 
+      do {
+        var commaLocation = ($ splitBy " ") indexWhere ($ contains ",")
+        ---
+        $ replace "," with "" splitBy " " orderBy -$$ update [ commaLocation ] with ($ ++ ",") joinBy " "
+      },
+
+  "Explanation": {
+    "Phrases without '!' or ','": "Splits the phrase into words, reverses the word order, and joins them back together with spaces.",
+    "Phrases with both '!' and ','": "Removes both punctuation marks, splits the phrase into words, adds the '!' back to the first word, reverses the word order, then adds the ',' back to its original position, and joins the words with spaces.",
+    "Phrases with only '!'": "Removes the '!', splits the phrase into words, adds it back to the first word, then reverses the word order and joins the words with spaces.",
+    "Phrases with only ','": "Removes the ',', splits the phrase into words, reverses the word order, then adds it back to its original position, and joins the words with spaces."
   }
 }
 ```

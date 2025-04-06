@@ -10,6 +10,7 @@ var towers = payload.towers mapObject (
   else  // Left tower - aux
     aux: {name: $$, value: $}
 )
+
 var moves = payload.moves
 
 var toh = (disks, source, target, aux, moves) ->
@@ -36,7 +37,7 @@ var finalTowers = {
   targetTower: payload.targetTower,
   towers: finalTowers orderBy($$),
   Explanation: {
-      "Towers Var -  Separate the name and value for each tower": towers,
-      "ToH Function - Count the number of moves": toh(payload.disks, towers.source.name, towers.target.name, towers.aux.name, moves)
+    "Towers Var -  Separate the name and value for each tower": towers,
+    "ToH Function - Count the number of moves": toh(payload.disks, towers.source.name, towers.target.name, towers.aux.name, moves)
   }
 }

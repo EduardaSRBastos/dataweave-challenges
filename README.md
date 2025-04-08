@@ -4,7 +4,32 @@
 
  <p><i> DataWeave challenges from <a href="https://www.prostdev.com/">ProstDev.com</a> with explanations.</i></p>
 
+<br>
+
+---
+
+## Table of Contents
+
+<table>
+  <tbody>
+    <tr>
+      <td><a href="#challenge-1---highest-number-of-sums"><b>Challenge #1</b></a></td>
+      <td><a href="#challenge-2---rock-paper-scissors-score"><b>Challenge #2</b></a></td>
+      <td><a href="#challenge-3---sum-of-characters-in-palindrome-sentences"><b>Challenge #3</b></a></td>
+      <td><a href="#challenge-4---tower-of-hanoi"><b>Challenge #4</b></a></td>
+    </tr>
+    <tr>
+      <td><a href="#challenge-5---reverse-phrases-words-keeping-the-punctuation"><b>Challenge #5</b></a></td>
+      <td><a href="#challenge-6---digits-at-indexes-20-to-25-of-the-factorial-sum"><b>Challenge #6</b></a></td>
+      <td><a href="#challenge-7---json-uppercase-values-except-for-thisname"><b>Challenge #7</b></a></td>
+      <td><a href="#challenge-8---add-up-the-numbers-to-1-digit"><b>Challenge #8</b></a></td>
+    </tr>
+  </tbody>
+</table>
+
 </div>
+
+---
 
 <br>
 

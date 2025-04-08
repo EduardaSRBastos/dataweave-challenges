@@ -263,3 +263,25 @@ fun valueType(value, key) =
 "Uppercase Values Except for 'thisname'": payload mapObject { ($$): valueType($, $$) }
 ```
 </details>
+
+### [Challenge #8 - Add Up the Numbers to 1 Digit](https://www.prostdev.com/post/dataweave-programming-challenge-8)
+
+<a href="https://dataweave.mulesoft.com/learn/playground?projectMethod=GHRepo&repo=EduardaSRBastos%2Fdataweave-challenges&path=challenge-8">DataWeave Playground<a>
+
+<details>
+  <summary>Function</summary>
+
+```dataweave
+%dw 2.0
+output application/json
+
+fun sumNumbers (number) =
+    if(sizeOf(number) > 1)
+        sumNumbers(sum(number splitBy ""))
+    else
+        number
+---
+// Same Result: sum(sum(sum(payload splitBy "\n") splitBy "") splitBy "")
+"Add Up the Numbers to 1 Digit": sumNumbers(sum(payload splitBy "\n"))
+```
+</details>
